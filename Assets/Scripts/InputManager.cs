@@ -1,7 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.InputSystem;
+using UnityEngine.InputSystem; // InputSystem PROVIDES interfaces dan base classes:
 
 public class InputManager : MonoBehaviour
 {
@@ -15,10 +15,14 @@ public class InputManager : MonoBehaviour
     /// </summary>
     void Awake()
     {
-        playerInput = new PlayerInput();
-        onFoot = playerInput.OnFoot;
+        playerInput = new PlayerInput(); // Inisialisasi sistem input
+        onFoot = playerInput.OnFoot; // Ambil aksi-aksi untuk mode "on foot"
+
+        // Dapatkan komponen dari GameObject
         motor = GetComponent<PlayerMotor>();
         look = GetComponent<PlayerLook>();
+
+        // Ketika tombol jump (yg diset di onFoot) ditekan, maka panggil function Jump dari 'motor'
         onFoot.Jump.performed += ctx => motor.Jump();
     }
 
@@ -31,8 +35,13 @@ public class InputManager : MonoBehaviour
         motor.ProcessMove(onFoot.Movement.ReadValue<Vector2>());
     }
 
+    /// <summary>
+    /// LateUpdate is called every frame, if the Behaviour is enabled.
+    /// It is called after all Update functions have been called.
+    /// </summary>
     void LateUpdate()
     {
+        // Read the current Look input (mouse -> vector2) and pass it to the camera look logic.”
         look.ProcessLook(onFoot.Look.ReadValue<Vector2>());
     }
 
