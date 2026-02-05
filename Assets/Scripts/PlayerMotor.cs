@@ -41,10 +41,10 @@ public class PlayerMotor : MonoBehaviour
 
         playerVelocity.y += gravity * Time.deltaTime; // Apply gravity
 
-        if (isGrounded && playerVelocity.y < 0)
-            playerVelocity.y = -2f;
+        if (isGrounded && playerVelocity.y < 0) //If the player is on the ground and currently falling
+            playerVelocity.y = -2f; // create vertical velocity to keep player standing on the ground
 
-        controller.Move(playerVelocity * Time.deltaTime);
+        controller.Move(playerVelocity * Time.deltaTime); //Moves the character vertically (gravity and jump)
         Debug.Log(playerVelocity.y);
     }
 
