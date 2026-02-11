@@ -4,8 +4,13 @@ using UnityEngine;
 
 public class Keypad : Interactable
 {
+    [SerializeField]
+    private GameObject door;
+    private bool doorOpen;
+
     protected override void Interact()
     {
-        Debug.Log("interacted with " + gameObject.name);
+        doorOpen = !doorOpen;
+        door.GetComponent<Animator>().SetBool("isOpen", doorOpen);
     }
 }

@@ -14,11 +14,14 @@ public class PlayerInteract : MonoBehaviour
 
     private PlayerUI playerUI;
 
+    private InputManager inputManager;
+
     // Start is called before the first frame update
     void Start()
     {
         cam = GetComponent<PlayerLook>().cam;
         playerUI = GetComponent<PlayerUI>();
+        inputManager = GetComponent<InputManager>();
     }
 
     // Update is called once per frame
@@ -30,9 +33,14 @@ public class PlayerInteract : MonoBehaviour
         RaycastHit hitInfo;
         if (Physics.Raycast(ray, out hitInfo, distance, mask))
         {
-            if (hitInfo.collider.GetComponent<Interactable>() != null)
+            Interactable interactable = hitInfo.collider.GetComponent<Interactable>();
+            if (interactable != null)
             {
-                playerUI.updateText(hitInfo.collider.GetComponent<Interactable>().promptMessage);
+                playerUI.updateText(interactable.promptMessage);
+                if (inputManager.onFoot.Interact.triggered)
+                {
+                    interactable.baseInteract();
+                }
             }
         }
     }
