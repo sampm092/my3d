@@ -7,8 +7,14 @@ public abstract class Interactable : MonoBehaviour
     // Message displayed if interactable
     public string promptMessage;
 
+    public bool useEvents;
+
     public void baseInteract()
     {
+        if (useEvents)
+        {
+            GetComponent<InteractionEvent>().OnInteract.Invoke();
+        }
         Interact();
     }
 
