@@ -10,7 +10,7 @@ public class PlayerHealth : MonoBehaviour
     private float health;
     public int MaxHealth = 100;
     public float ChipSpeed = 2f;
-    public float lerpTimer;
+    public float lerpTimer; //bar speed
     public Image backHB;
     public Image FrontHB;
     public TextMeshProUGUI HealthText;
@@ -21,17 +21,17 @@ public class PlayerHealth : MonoBehaviour
     /// </summary>
     void Start()
     {
-        health = MaxHealth;
+        health = MaxHealth; // health full
     }
 
     void Update()
     {
-        health = Mathf.Clamp(health, 0, MaxHealth);
-        if (Input.GetKeyDown(KeyCode.R))
+        health = Mathf.Clamp(health, 0, MaxHealth); //declare health range
+        if (Input.GetKeyDown(KeyCode.R)) // for testing
         {
             TakeDamage(Random.Range(5, 10));
         }
-        if (Input.GetKeyDown(KeyCode.Q))
+        if (Input.GetKeyDown(KeyCode.Q)) // for testing
         {
             fillHP(Random.Range(5, 10));
         }
@@ -40,11 +40,11 @@ public class PlayerHealth : MonoBehaviour
 
     public void UpdateHealthUI()
     {
-        float fillF = FrontHB.fillAmount;
-        float fillB = backHB.fillAmount;
+        float fillF = FrontHB.fillAmount; // take panel value
+        float fillB = backHB.fillAmount; // take panel value
         float hFraction = health / MaxHealth;
 
-        if (fillB > hFraction)
+        if (fillB > hFraction) // Taking damage, health bar animation
         {
             FrontHB.fillAmount = hFraction;
             backHB.color = Color.red;
@@ -53,7 +53,7 @@ public class PlayerHealth : MonoBehaviour
             percentComplete = percentComplete * percentComplete;
             backHB.fillAmount = Mathf.Lerp(fillB, hFraction, percentComplete);
         }
-        if (fillF < hFraction)
+        if (fillF < hFraction) // health bar animation if healed
         {
             backHB.color = Color.green;
             backHB.fillAmount = hFraction;
