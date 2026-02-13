@@ -10,6 +10,7 @@ public class PlayerHealth : MonoBehaviour
     private float health;
     public int MaxHealth = 100;
     public float ChipSpeed = 2f;
+    public float lerpTimer;
     public Image BgHB;
     public Image FrontHB;
     public TextMeshProUGUI HealthText;
@@ -26,6 +27,11 @@ public class PlayerHealth : MonoBehaviour
     void Update()
     {
         health = Mathf.Clamp(health, 0, MaxHealth);
+        if (Input.GetKeyDown(KeyCode.R))
+        {
+            TakeDamage(Random.Range(5, 10));
+        }
+        UpdateHealthUI();
     }
 
     public void UpdateHealthUI()
@@ -38,6 +44,15 @@ public class PlayerHealth : MonoBehaviour
         {
             FrontHB.fillAmount = hFraction;
             BgHB.color = Color.red;
+            lerpTimer += Time.deltaTime;
+            float percentComplete = lerpTimer / ChipSpeed;
+            BgHB.fillAmount = Mathf.Lerp(fillB, hFraction, percentComplete);
         }
+    }
+
+    public void TakeDamage(float damage)
+    {
+        health -= damage;
+        lerpTimer = 0f;
     }
 }
