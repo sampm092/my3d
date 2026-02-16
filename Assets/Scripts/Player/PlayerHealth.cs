@@ -22,7 +22,8 @@ public class PlayerHealth : MonoBehaviour
     public Image healOverlay;
     public float duration;
     public float fadespeed;
-    private float durationTimer;
+    private float damageTimer;
+    private float healTimer;
 
     /// <summary>
     /// Start is called on the frame when a script is enabled just before
@@ -31,59 +32,39 @@ public class PlayerHealth : MonoBehaviour
     void Start()
     {
         health = MaxHealth; // health full
-        damageOverlay.color = new Color(
-            damageOverlay.color.r,
-            damageOverlay.color.g,
-            damageOverlay.color.b,
-            0
-        );
-        healOverlay.color = new Color(
-            healOverlay.color.r,
-            healOverlay.color.g,
-            healOverlay.color.b,
-            0
-        );
+        Color colorD = damageOverlay.color;
+        Color colorH = healOverlay.color;
+        damageOverlay.color = new Color(colorD.r, colorD.g, colorD.b, 0);
+        healOverlay.color = new Color(colorH.r, colorH.g, colorH.b, 0);
     }
 
     void Update()
     {
         health = Mathf.Clamp(health, 0, MaxHealth); //declare health range
         UpdateHealthUI();
-        //For Damaged
-        if (damageOverlay.color.a > 0)
+        // Damage overlay
+        FadeOverlay(damageOverlay, ref damageTimer, health < 30);
+
+        // Heal overlay
+        FadeOverlay(healOverlay, ref healTimer);
+    }
+
+    void FadeOverlay(Image overlay, ref float timer, bool keepVisible = false)
+    {
+        if (overlay.color.a <= 0f)
+            return;
+
+        if (keepVisible)
+            return;
+
+        timer += Time.deltaTime;
+
+        if (timer > duration)
         {
-            if (health < 30) //keep damageOverlay if health low
-                return;
-            durationTimer += Time.deltaTime;
-            if (durationTimer > duration)
-            {
-                // fade image
-                float tempAlpha = damageOverlay.color.a;
-                tempAlpha -= Time.deltaTime * fadespeed;
-                damageOverlay.color = new Color(
-                    damageOverlay.color.r,
-                    damageOverlay.color.g,
-                    damageOverlay.color.b,
-                    tempAlpha
-                );
-            }
-        }
-        // For Healed
-        if (healOverlay.color.a > 0)
-        {
-            durationTimer += Time.deltaTime;
-            if (durationTimer > duration)
-            {
-                // fade image
-                float tempAlpha = healOverlay.color.a;
-                tempAlpha -= Time.deltaTime * fadespeed;
-                healOverlay.color = new Color(
-                    healOverlay.color.r,
-                    healOverlay.color.g,
-                    healOverlay.color.b,
-                    tempAlpha
-                );
-            }
+            Color c = overlay.color;
+            c.a -= Time.deltaTime * fadespeed;
+            c.a = Mathf.Clamp01(c.a); // prevents negative alpha
+            overlay.color = c;
         }
     }
 
@@ -117,7 +98,7 @@ public class PlayerHealth : MonoBehaviour
     {
         health -= damage;
         lerpTimer = 0f;
-        durationTimer = 0;
+        damageTimer = 0;
         damageOverlay.color = new Color(
             damageOverlay.color.r,
             damageOverlay.color.g,
@@ -126,11 +107,13 @@ public class PlayerHealth : MonoBehaviour
         );
     }
 
-    public void fillHP(float heal)
+    public void FillHP(float heal)
     {
+        if (health == MaxHealth)
+            return;
         health += heal;
         lerpTimer = 0f;
-        durationTimer = 0;
+        healTimer = 0;
         healOverlay.color = new Color(
             healOverlay.color.r,
             healOverlay.color.g,
