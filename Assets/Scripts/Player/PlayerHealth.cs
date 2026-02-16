@@ -8,12 +8,21 @@ public class PlayerHealth : MonoBehaviour
 {
     // Start is called before the first frame update
     private float health;
+
+    [Header("Health Bar")]
     public int MaxHealth = 100;
     public float ChipSpeed = 2f;
     public float lerpTimer; //bar speed
     public Image backHB;
     public Image FrontHB;
     public TextMeshProUGUI HealthText;
+
+    [Header("Damage Overlay")]
+    public Image overlay;
+    public float duration;
+    public float fadespeed;
+
+    private float durationTimer;
 
     /// <summary>
     /// Start is called on the frame when a script is enabled just before
@@ -22,20 +31,31 @@ public class PlayerHealth : MonoBehaviour
     void Start()
     {
         health = MaxHealth; // health full
+        overlay.color = new Color(overlay.color.r, overlay.color.g, overlay.color.b, 0);
     }
 
     void Update()
     {
         health = Mathf.Clamp(health, 0, MaxHealth); //declare health range
-        if (Input.GetKeyDown(KeyCode.R)) // for testing
-        {
-            TakeDamage(Random.Range(5, 10));
-        }
-        if (Input.GetKeyDown(KeyCode.Q)) // for testing
-        {
-            fillHP(Random.Range(5, 10));
-        }
         UpdateHealthUI();
+        if (overlay.color.a > 0)
+        {
+            if (health < 30) //keep overlay if health low
+                return;
+            durationTimer += Time.deltaTime;
+            if (durationTimer > duration)
+            {
+                // fade image
+                float tempAlpha = overlay.color.a;
+                tempAlpha -= Time.deltaTime * fadespeed;
+                overlay.color = new Color(
+                    overlay.color.r,
+                    overlay.color.g,
+                    overlay.color.b,
+                    tempAlpha
+                );
+            }
+        }
     }
 
     public void UpdateHealthUI()
@@ -68,6 +88,8 @@ public class PlayerHealth : MonoBehaviour
     {
         health -= damage;
         lerpTimer = 0f;
+        durationTimer = 0;
+        overlay.color = new Color(overlay.color.r, overlay.color.g, overlay.color.b, 1);
     }
 
     public void fillHP(float heal)
