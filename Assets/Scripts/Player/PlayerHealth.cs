@@ -32,10 +32,8 @@ public class PlayerHealth : MonoBehaviour
     void Start()
     {
         health = MaxHealth; // health full
-        Color colorD = damageOverlay.color;
-        Color colorH = healOverlay.color;
-        damageOverlay.color = new Color(colorD.r, colorD.g, colorD.b, 0);
-        healOverlay.color = new Color(colorH.r, colorH.g, colorH.b, 0);
+        SetAlpha(damageOverlay, 0f);
+        SetAlpha(healOverlay, 0f);
     }
 
     void Update()
@@ -66,6 +64,13 @@ public class PlayerHealth : MonoBehaviour
             c.a = Mathf.Clamp01(c.a); // prevents negative alpha
             overlay.color = c;
         }
+    }
+
+    void SetAlpha(Image img, float alpha)
+    {
+        Color c = img.color;
+        c.a = alpha;
+        img.color = c;
     }
 
     public void UpdateHealthUI()

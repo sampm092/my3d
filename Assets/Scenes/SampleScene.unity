@@ -764,7 +764,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 417636446}
         m_TargetAssemblyTypeName: PlayerHealth, Assembly-CSharp
-        m_MethodName: fillHP
+        m_MethodName: FillHP
         m_Mode: 4
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
