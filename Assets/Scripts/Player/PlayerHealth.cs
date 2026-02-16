@@ -17,11 +17,11 @@ public class PlayerHealth : MonoBehaviour
     public Image FrontHB;
     public TextMeshProUGUI HealthText;
 
-    [Header("Damage Overlay")]
-    public Image overlay;
+    [Header("Overlay")]
+    public Image damageOverlay;
+    public Image healOverlay;
     public float duration;
     public float fadespeed;
-
     private float durationTimer;
 
     /// <summary>
@@ -31,27 +31,56 @@ public class PlayerHealth : MonoBehaviour
     void Start()
     {
         health = MaxHealth; // health full
-        overlay.color = new Color(overlay.color.r, overlay.color.g, overlay.color.b, 0);
+        damageOverlay.color = new Color(
+            damageOverlay.color.r,
+            damageOverlay.color.g,
+            damageOverlay.color.b,
+            0
+        );
+        healOverlay.color = new Color(
+            healOverlay.color.r,
+            healOverlay.color.g,
+            healOverlay.color.b,
+            0
+        );
     }
 
     void Update()
     {
         health = Mathf.Clamp(health, 0, MaxHealth); //declare health range
         UpdateHealthUI();
-        if (overlay.color.a > 0)
+        //For Damaged
+        if (damageOverlay.color.a > 0)
         {
-            if (health < 30) //keep overlay if health low
+            if (health < 30) //keep damageOverlay if health low
                 return;
             durationTimer += Time.deltaTime;
             if (durationTimer > duration)
             {
                 // fade image
-                float tempAlpha = overlay.color.a;
+                float tempAlpha = damageOverlay.color.a;
                 tempAlpha -= Time.deltaTime * fadespeed;
-                overlay.color = new Color(
-                    overlay.color.r,
-                    overlay.color.g,
-                    overlay.color.b,
+                damageOverlay.color = new Color(
+                    damageOverlay.color.r,
+                    damageOverlay.color.g,
+                    damageOverlay.color.b,
+                    tempAlpha
+                );
+            }
+        }
+        // For Healed
+        if (healOverlay.color.a > 0)
+        {
+            durationTimer += Time.deltaTime;
+            if (durationTimer > duration)
+            {
+                // fade image
+                float tempAlpha = healOverlay.color.a;
+                tempAlpha -= Time.deltaTime * fadespeed;
+                healOverlay.color = new Color(
+                    healOverlay.color.r,
+                    healOverlay.color.g,
+                    healOverlay.color.b,
                     tempAlpha
                 );
             }
@@ -89,12 +118,24 @@ public class PlayerHealth : MonoBehaviour
         health -= damage;
         lerpTimer = 0f;
         durationTimer = 0;
-        overlay.color = new Color(overlay.color.r, overlay.color.g, overlay.color.b, 1);
+        damageOverlay.color = new Color(
+            damageOverlay.color.r,
+            damageOverlay.color.g,
+            damageOverlay.color.b,
+            1
+        );
     }
 
     public void fillHP(float heal)
     {
         health += heal;
         lerpTimer = 0f;
+        durationTimer = 0;
+        healOverlay.color = new Color(
+            healOverlay.color.r,
+            healOverlay.color.g,
+            healOverlay.color.b,
+            1
+        );
     }
 }
