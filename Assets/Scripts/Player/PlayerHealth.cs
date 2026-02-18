@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -11,7 +9,7 @@ public class PlayerHealth : MonoBehaviour
 
     [Header("Health Bar")]
     public int MaxHealth = 100;
-    public float ChipSpeed = 2f;
+    public float ChipSpeed = 2f; //animation speed
     public float lerpTimer; //bar speed
     public Image backHB;
     public Image FrontHB;
@@ -74,57 +72,66 @@ public class PlayerHealth : MonoBehaviour
         img.color = c; //update image color
     }
 
-    public void UpdateHealthUI()
+    public void UpdateHealthUI() //health bar animation
     {
         float fillF = FrontHB.fillAmount; // take panel value
         float fillB = backHB.fillAmount; // take panel value
-        float hFraction = health / MaxHealth;
+        float hFraction = health / MaxHealth; //actual health percentage value
 
-        if (fillB > hFraction) // Taking damage, health bar animation
+        if (fillB > hFraction)
+        // Taking damage, health bar animation
         {
-            FrontHB.fillAmount = hFraction;
-            backHB.color = Color.red;
-            lerpTimer += Time.deltaTime;
+            FrontHB.fillAmount = hFraction; //instantly shorten front bar based on hfraction
+            backHB.color = Color.red; //change back bar color to red
+            lerpTimer += Time.deltaTime; //increase overtime
             float percentComplete = lerpTimer / ChipSpeed;
-            percentComplete = percentComplete * percentComplete;
-            backHB.fillAmount = Mathf.Lerp(fillB, hFraction, percentComplete);
+            percentComplete = percentComplete * percentComplete; //squaring for ease-in effect
+
+            //Lerp = smoothly transition between a starting value (a) and an ending value (b) over time
+            backHB.fillAmount = Mathf.Lerp(fillB, hFraction, percentComplete); //back bar animation
         }
         if (fillF < hFraction) // health bar animation if healed
         {
-            backHB.color = Color.green;
-            backHB.fillAmount = hFraction;
+            backHB.color = Color.green; //change back bar color to green
+            backHB.fillAmount = hFraction; //instantly lengthen back bar based on hfraction
             lerpTimer += Time.deltaTime;
             float percentComplete = lerpTimer / ChipSpeed;
             percentComplete = percentComplete * percentComplete;
-            FrontHB.fillAmount = Mathf.Lerp(fillF, backHB.fillAmount, percentComplete);
+            FrontHB.fillAmount = Mathf.Lerp(fillF, backHB.fillAmount, percentComplete); //front bar animation
         }
     }
 
     public void TakeDamage(float damage)
     {
         health -= damage;
+
+        //reset to zero every time this happens
         lerpTimer = 0f;
         damageTimer = 0;
+
         damageOverlay.color = new Color(
             damageOverlay.color.r,
             damageOverlay.color.g,
             damageOverlay.color.b,
             1
-        );
+        ); //set opacity to 1
     }
 
     public void FillHP(float heal)
     {
-        if (health == MaxHealth)
+        if (health == MaxHealth) //make sure no effect if full health
             return;
         health += heal;
+
+        //reset to zero every time this happens
         lerpTimer = 0f;
-        healTimer = 0;
+        damageTimer = 0;
+
         healOverlay.color = new Color(
             healOverlay.color.r,
             healOverlay.color.g,
             healOverlay.color.b,
             1
-        );
+        ); //set opacity to 1
     }
 }
