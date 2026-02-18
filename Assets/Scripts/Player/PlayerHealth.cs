@@ -32,8 +32,8 @@ public class PlayerHealth : MonoBehaviour
     void Start()
     {
         health = MaxHealth; // health full
-        SetAlpha(damageOverlay, 0f);
-        SetAlpha(healOverlay, 0f);
+        SetAlpha(damageOverlay, 0f); //set overlay to invicible at start
+        SetAlpha(healOverlay, 0f); //set overlay to invicible at start
     }
 
     void Update()
@@ -41,7 +41,7 @@ public class PlayerHealth : MonoBehaviour
         health = Mathf.Clamp(health, 0, MaxHealth); //declare health range
         UpdateHealthUI();
         // Damage overlay
-        FadeOverlay(damageOverlay, ref damageTimer, health < 30);
+        FadeOverlay(damageOverlay, ref damageTimer, health < 30); //keep overlay with condition
 
         // Heal overlay
         FadeOverlay(healOverlay, ref healTimer);
@@ -49,28 +49,29 @@ public class PlayerHealth : MonoBehaviour
 
     void FadeOverlay(Image overlay, ref float timer, bool keepVisible = false)
     {
-        if (overlay.color.a <= 0f)
-            return;
+        // if (overlay.color.a <= 0f) //checks if opacity is zero (or below)
+        if (overlay.color.a <= 0.01f) // fading over time
+            return; // then do nothing
 
-        if (keepVisible)
-            return;
+        if (keepVisible) // situation based
+            return; // then do nothing
 
-        timer += Time.deltaTime;
+        timer += Time.deltaTime; //increment
 
-        if (timer > duration)
+        if (timer > duration) //overlay stays fully visible until duration reached
         {
-            Color c = overlay.color;
-            c.a -= Time.deltaTime * fadespeed;
+            Color c = overlay.color; //get overlay image color
+            c.a -= Time.deltaTime * fadespeed; //reduce transparancy little by little
             c.a = Mathf.Clamp01(c.a); // prevents negative alpha
-            overlay.color = c;
+            overlay.color = c; //update overlay image color
         }
     }
 
     void SetAlpha(Image img, float alpha)
     {
-        Color c = img.color;
-        c.a = alpha;
-        img.color = c;
+        Color c = img.color; //get image color
+        c.a = alpha; //set transparancy based on alpha value
+        img.color = c; //update image color
     }
 
     public void UpdateHealthUI()
