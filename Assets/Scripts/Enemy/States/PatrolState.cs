@@ -17,16 +17,16 @@ public class PatrolState : BaseState
 
     public void PatrolCycle()
     {
-        if (enemy.Agent.remainingDistance < 0.2f)
+        if (enemy.Agent.remainingDistance < 0.2f) // check if enemy reach waypoint
         {
             waitTime += Time.deltaTime;
             if (waitTime > 3)
             {
-                if (waypointIndex < enemy.path.waypoints.Count - 1)
-                    waypointIndex++;
-                else
-                    waypointIndex = 0;
-                enemy.Agent.SetDestination(enemy.path.waypoints[waypointIndex].position);
+                if (waypointIndex < enemy.path.waypoints.Count - 1) // If not at last waypoint
+                    waypointIndex++; // increase index point
+                else // if at last waypoint
+                    waypointIndex = 0; // reset index to start point
+                enemy.Agent.SetDestination(enemy.path.waypoints[waypointIndex].position); // move enemy based on the index point
                 waitTime = 0;
             }
         }
