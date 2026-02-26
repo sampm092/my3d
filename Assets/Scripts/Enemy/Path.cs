@@ -1,11 +1,10 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 
 public class Path : MonoBehaviour
 {
-    public List<Transform> waypoints;
+    public List<Transform> waypoints; // add waypoint list that contain position, rotation, and scale of the waypoint
 
     [SerializeField]
     private bool alwaysDrawPath;
@@ -26,12 +25,11 @@ public class Path : MonoBehaviour
         }
     }
 
-    public void DrawPath()
+    public void DrawPath() // path drawing in editor
     {
         for (int i = 0; i < waypoints.Count; i++)
         {
-            GUIStyle labelStyle = new GUIStyle();
-            labelStyle.fontSize = 30;
+            GUIStyle labelStyle = new GUIStyle { fontSize = 30 };
             labelStyle.normal.textColor = debugColour;
             if (drawNumbers)
                 Handles.Label(waypoints[i].position, i.ToString(), labelStyle);

@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -9,8 +7,8 @@ public class Enemy : MonoBehaviour
     private NavMeshAgent agent;
     public NavMeshAgent Agent
     {
-        get => agent;
-    }
+        get => agent; // When someone asks for Agent, return agent.
+    } // encapsulation to avoid changing its value
 
     [SerializeField]
     private string currentState;

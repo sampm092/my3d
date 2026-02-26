@@ -1,11 +1,9 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class PatrolState : BaseState
 {
     public int waypointIndex; // track which waypoint currently targeting
-    public float waitTime;
+    public float waitTime; // enemy wait time at one waypoint
 
     // Start is called before the first frame update
     public override void Enter() { }
