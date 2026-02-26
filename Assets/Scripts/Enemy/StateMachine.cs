@@ -5,6 +5,7 @@ using UnityEngine;
 public class StateMachine : MonoBehaviour
 {
     public BaseState activeState;
+    public PatrolState patrolState;
 
     // Start is called before the first frame update
     void Start() { }
@@ -12,6 +13,8 @@ public class StateMachine : MonoBehaviour
     public void Initialize()
     {
         // setup default state
+        patrolState = new PatrolState();
+        SwitchState(patrolState);
     }
 
     // Update is called once per frame
@@ -34,7 +37,7 @@ public class StateMachine : MonoBehaviour
         {
             // set new state
             activeState.stateMachine = this;
-            //assign state enemy class
+            activeState.enemy = GetComponent<Enemy>(); //assign state enemy class
             activeState.Enter();
         }
     }
