@@ -9,6 +9,11 @@ public class StateMachine : MonoBehaviour
     // Start is called before the first frame update
     void Start() { }
 
+    public void Initialize()
+    {
+        // setup default state
+    }
+
     // Update is called once per frame
     void Update()
     {
